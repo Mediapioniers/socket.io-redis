@@ -106,13 +106,15 @@ function adapter(uri, opts) {
       if (err) self.emit('error', err);
     });
 
-    sub.on('pmessageBuffer', this.onmessage.bind(this));
+    // Due to a bug in node_redis:3.0.2 we don't listen to the pmessageBuffer anymore
+    sub.on('pmessage', this.onmessage.bind(this));
 
     sub.subscribe([this.requestChannel, this.responseChannel], function(err){
       if (err) self.emit('error', err);
     });
 
-    sub.on('messageBuffer', this.onrequest.bind(this));
+    // Due to a bug in node_redis:3.0.2 we don't listen to the messageBuffer anymore
+    sub.on('message', this.onrequest.bind(this));
 
     function onError(err) {
       self.emit('error', err);
